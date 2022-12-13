@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthProvider';
+import { toast } from 'react-hot-toast';
 import OrderRow from './OrderRow';
 
 const Orders = () => {
@@ -9,9 +10,34 @@ const Orders = () => {
     useEffect(() => {
         fetch(`http://localhost:5000/orders/?email=${user.email}`)
             .then(res => res.json())
-            .then(data => setOrders(data))
+            .then(data => {
+                setOrders(data);
+            })
             .catch(err => console.error(err));
     }, [user?.email]);
+
+    // deleting an order
+    const handleDelete = (_id) => {
+        const proceed = window.confirm("Are you sure you want to cancel this order?");
+        if (proceed) {
+            fetch(`http://localhost:5000/orders/${_id}`, {
+                method: 'DELETE'
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.deletedCount > 0) {
+                    toast.success("Order successfully deleted");
+                    const remaining = orders.filter(order => order._id !== _id);
+                    setOrders(remaining);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+        else {
+            console.log("order deletion aborted");
+        }
+    }
 
     return (
         <div>
@@ -36,6 +62,7 @@ const Orders = () => {
                             orders.map(order => <OrderRow 
                                 key={order._id}
                                 order={order}
+                                handleDelete={handleDelete}
                             />)
                         }
                     </tbody>

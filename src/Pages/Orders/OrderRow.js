@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-const OrderRow = ({ order }) => {
-    const { service, serviceName, price, customer, phone, message } = order;
+const OrderRow = ({ order, handleDelete }) => {
+    const { _id, service, serviceName, price, customer, phone, message } = order;
     const [orderService, setOrderService] = useState({});
 
+    // loading particular service data
     useEffect(() => {
         fetch(`http://localhost:5000/services/${service}`)
             .then(res => res.json())
@@ -11,11 +12,13 @@ const OrderRow = ({ order }) => {
             .catch(err => console.error(err));
     }, [service]);
 
+    
+
     return (
         <tr>
             <th>
                 <label>
-                <button className="btn btn-ghost">X</button>
+                <button onClick={() => handleDelete(_id)} className="btn btn-ghost">X</button>
                 </label>
             </th>
             <td>
