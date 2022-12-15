@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 const OrderRow = ({ order, handleDelete, handleStatusUpdate }) => {
-    const { _id, service, serviceName, price, customer, phone, message, status } = order;
+    const { _id, service, serviceName, price, customer, phone, status } = order;
     const [orderService, setOrderService] = useState({});
 
     // loading particular service data
