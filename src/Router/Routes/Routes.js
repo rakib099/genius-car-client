@@ -28,7 +28,7 @@ const routes = createBrowserRouter([
                 path: '/checkout/:id',
                 element: <PrivateRoute><Checkout /></PrivateRoute>,
                 loader: ({params}) => {
-                    return fetch(`http://localhost:5000/services/${params.id}`);
+                    return fetch(`https://genius-car-server-liard-xi.vercel.app/services/${params.id}`);
                 }
             },
             {

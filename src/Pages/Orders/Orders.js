@@ -4,11 +4,11 @@ import { toast } from 'react-hot-toast';
 import OrderRow from './OrderRow';
 
 const Orders = () => {
-    const { user, logOut } = useContext(AuthContext);
+    const { user, logOut, loading, setLoading } = useContext(AuthContext);
     const [orders, setOrders] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/orders/?email=${user?.email}`, {
+        fetch(`https://genius-car-server-liard-xi.vercel.app/orders/?email=${user?.email}`, {
             headers: {
                 authorization: `Bearer ${localStorage.getItem('genius-token')}`
             }
@@ -25,28 +25,29 @@ const Orders = () => {
                 setOrders(data);
             })
             .catch(err => console.error(err));
-    }, [user?.email, logOut]);
+    }, [user?.email, logOut, setLoading]);
 
+    
     // deleting an order
     const handleDelete = (_id) => {
         const proceed = window.confirm("Are you sure you want to cancel this order?");
         if (proceed) {
-            fetch(`http://localhost:5000/orders/${_id}`, {
+            fetch(`https://genius-car-server-liard-xi.vercel.app/orders/${_id}`, {
                 method: 'DELETE',
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('genius-token')}`
                 }
             })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                if (data.deletedCount > 0) {
-                    toast.success("Order successfully deleted");
-                    const remaining = orders.filter(order => order._id !== _id);
-                    setOrders(remaining);
-                }
-            })
-            .catch(err => console.error(err));
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.deletedCount > 0) {
+                        toast.success("Order successfully deleted");
+                        const remaining = orders.filter(order => order._id !== _id);
+                        setOrders(remaining);
+                    }
+                })
+                .catch(err => console.error(err));
         }
         else {
             console.log("order deletion aborted");
@@ -54,27 +55,27 @@ const Orders = () => {
     }
 
     const handleStatusUpdate = (_id) => {
-        fetch(`http://localhost:5000/orders/${_id}`, {
+        fetch(`https://genius-car-server-liard-xi.vercel.app/orders/${_id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 authorization: `Bearer ${localStorage.getItem('genius-token')}`
             },
-            body: JSON.stringify({status: "Approved"})
+            body: JSON.stringify({ status: "Approved" })
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            // updating the approved one in the UI
-            if (data.modifiedCount > 0) {
-                const remaining = orders.filter(odr => odr._id !== _id);
-                const approving = orders.find(odr => odr._id === _id);
-                approving.status = "Approved";//status property add
-                const newOrders = [...remaining, approving];
-                setOrders(newOrders);
-            }
-        })
-        .catch(err => console.error(err));
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                // updating the approved one in the UI
+                if (data.modifiedCount > 0) {
+                    const remaining = orders.filter(odr => odr._id !== _id);
+                    const approving = orders.find(odr => odr._id === _id);
+                    approving.status = "Approved";//status property add
+                    const newOrders = [...remaining, approving];
+                    setOrders(newOrders);
+                }
+            })
+            .catch(err => console.error(err));
     }
 
     return (
@@ -94,7 +95,7 @@ const Orders = () => {
                     </thead>
                     <tbody>
                         {
-                            orders.map(order => <OrderRow 
+                            orders.map(order => <OrderRow
                                 key={order._id}
                                 order={order}
                                 handleDelete={handleDelete}
@@ -102,7 +103,7 @@ const Orders = () => {
                             />)
                         }
                     </tbody>
-                    
+
                 </table>
             </div>
         </div>

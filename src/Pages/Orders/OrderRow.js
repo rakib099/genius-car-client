@@ -6,7 +6,7 @@ const OrderRow = ({ order, handleDelete, handleStatusUpdate }) => {
 
     // loading particular service data
     useEffect(() => {
-        fetch(`http://localhost:5000/services/${service}`)
+        fetch(`https://genius-car-server-liard-xi.vercel.app/services/${service}`)
             .then(res => res.json())
             .then(data => setOrderService(data))
             .catch(err => console.error(err));

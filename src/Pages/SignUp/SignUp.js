@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider';
+import { setAuthToken } from '../../api/auth';
 
 const SignUp = () => {
     const {createUser, updateUserProfile} = useContext(AuthContext);
@@ -14,13 +15,12 @@ const SignUp = () => {
         const email = form.email.value;
         const password = form.password.value;
 
-        console.log(name, email, password);
-
         createUser(email, password)
         .then(result => {
             const user = result.user;
             alert("Sign up successful. Now, you can login");
             console.log(user);
+            setAuthToken(user);
             form.reset();
             handleUpdateUser(name);
         })

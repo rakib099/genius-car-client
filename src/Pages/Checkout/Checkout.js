@@ -31,7 +31,7 @@ const Checkout = () => {
             return;
         }
 
-        fetch('http://localhost:5000/orders', {
+        fetch('https://genius-car-server-liard-xi.vercel.app/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,10 +1,13 @@
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { setAuthToken } from '../../api/auth';
 import img from '../../assets/images/login/login.svg';
 import { AuthContext } from '../../contexts/AuthProvider';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 
 const Login = () => {
-    const { signIn } = useContext(AuthContext);
+    const { signIn, providerLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -18,30 +21,13 @@ const Login = () => {
         const password = form.password.value;
 
         signIn(email, password)
-            .then(result => {
+            .then((result) => {
                 const user = result.user;
-                // preparing data to send to the server side
-                const currentUser = {
-                    email: user.email
-                }
 
-                // get jwt token
-                fetch('http://localhost:5000/jwt', {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify(currentUser)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data);
-                    // l.storage is not the best place to store jwt token
-                    localStorage.setItem('genius-token', data.token);
-                    navigate(from, { replace: true });
-                })
-                .catch(err => console.error(err));
-
+                // get JWT token
+                setAuthToken(user, navigate, from);
+                
+                // navigate(from, { replace: true });
                 form.reset();
 
             })
@@ -77,6 +63,7 @@ const Login = () => {
                         </div>
                     </form>
                     <p className='text-center'>New to this website? <Link className='text-orange-600 font-semibold' to="/signup">Sign up</Link></p>
+                    <SocialLogin />
                 </div>
             </div>
         </div>
