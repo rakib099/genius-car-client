@@ -14,11 +14,11 @@ const Orders = () => {
             }
         })
             .then(res => {
-                // if unauthorized or invalid token or token expired
+                // if unauthorized or invalid token or expired token
                 if (res.status === 401 || res.status === 403) {
                     return logOut();
                 }
-                return res.json()
+                return res.json();
             })
             .then(data => {
                 // console.log('received', data);
