@@ -3,12 +3,13 @@ import ServiceCard from './ServiceCard';
 
 const Services = () => {
     const [services, setServices] = useState([]);
+    const [isAsc, setIsAsc] = useState(true);
 
     useEffect(() => {
-        fetch('https://genius-car-server-liard-xi.vercel.app/services')
+        fetch(`http://localhost:5000/services?order=${isAsc ? 'asc' : 'desc'}`)
             .then(res => res.json())
             .then(data => setServices(data));
-    }, []);
+    }, [isAsc]);
 
     return (
         <div className='mb-32'>
@@ -20,6 +21,17 @@ const Services = () => {
                     Our Service Area
                 </h1>
                 <p className='w-2/4 mx-auto'>the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. </p>
+            </div>
+            <div className='flex justify-end items-center gap-2 mb-3'>
+                <label htmlFor="sort">Sort: </label>
+                <select id='sort'
+                    className="select select-bordered w-50 max-w-xs" defaultValue="Ascending"
+                    onChange={e => {
+                        e.target.value === 'Ascending' ? setIsAsc(true) : setIsAsc(false)
+                    }}>
+                    <option value="Ascending" selected>Ascending</option>
+                    <option value="Descending">Descending</option>
+                </select>
             </div>
             <div className='grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
                 {
