@@ -4,7 +4,7 @@ import ServiceCard from './ServiceCard';
 const Services = () => {
     const [services, setServices] = useState([]);
     const [isAsc, setIsAsc] = useState(true);
-    const [search, setSearch] = useState("")
+    const [search, setSearch] = useState("");
     const searchRef = useRef();
 
     useEffect(() => {
